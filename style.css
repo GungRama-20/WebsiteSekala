@@ -1,0 +1,87 @@
+/* ================================================
+   assets/css/style.css — Global Styles SEKALA
+   ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap');
+
+:root {
+  --primary:        #1C4E8C;
+  --primary-mid:    #2563EB;
+  --primary-light:  #3B82F6;
+  --primary-pale:   #DBEAFE;
+  --accent:         #F59E0B;
+  --accent-dark:    #D97706;
+  --success:        #10B981;
+  --danger:         #EF4444;
+  --dark:           #0F1B2D;
+  --dark-2:         #1E293B;
+  --dark-3:         #334155;
+  --gray:           #64748B;
+  --gray-light:     #94A3B8;
+  --border:         #E2E8F0;
+  --bg:             #F8FAFC;
+  --bg-2:           #F1F5F9;
+  --white:          #FFFFFF;
+  --navy-grad:      linear-gradient(135deg, #0F1B2D 0%, #1C4E8C 50%, #3B82F6 100%);
+  --blue-grad:      linear-gradient(135deg, #1C4E8C 0%, #2563EB 100%);
+  --font-main:      'Plus Jakarta Sans', sans-serif;
+  --font-display:   'Sora', sans-serif;
+  --shadow-sm:      0 1px 4px rgba(0,0,0,0.07);
+  --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+  --shadow-lg:      0 8px 32px rgba(28,78,140,0.14);
+  --shadow-xl:      0 20px 60px rgba(0,0,0,0.13);
+  --radius-sm:      8px;
+  --radius-md:      12px;
+  --radius-lg:      20px;
+  --radius-xl:      30px;
+  --transition:     all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-main); background: var(--bg); color: var(--dark); font-size: 15px; line-height: 1.65; overflow-x: hidden; }
+
+/* ---- CONTAINER ---- */
+.container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+
+/* ---- BUTTONS ---- */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: var(--radius-md); font-family: var(--font-main); font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: var(--transition); text-decoration: none; white-space: nowrap; }
+.btn-primary { background: var(--blue-grad); color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.32); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.44); }
+.btn-dark { background: var(--dark); color: #fff; box-shadow: var(--shadow-md); }
+.btn-dark:hover { transform: translateY(-2px); background: var(--dark-2); }
+.btn-outline { background: transparent; color: var(--primary-mid); border: 2px solid var(--primary-mid); }
+.btn-outline:hover { background: var(--primary-pale); transform: translateY(-2px); }
+.btn-lg { padding: 15px 40px; font-size: 15px; border-radius: var(--radius-lg); }
+.btn-block { width: 100%; justify-content: center; }
+
+/* ---- FORM ELEMENTS ---- */
+.form-group { margin-bottom: 18px; }
+.form-label { display: block; font-weight: 600; font-size: 13px; color: var(--primary-mid); margin-bottom: 6px; }
+.form-label .req { color: var(--danger); }
+.form-control { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-main); font-size: 14px; color: var(--dark); background: var(--white); transition: var(--transition); outline: none; }
+.form-control:focus { border-color: var(--primary-mid); box-shadow: 0 0 0 3px rgba(37,99,235,0.11); }
+.form-control::placeholder { color: var(--gray-light); }
+textarea.form-control { resize: vertical; min-height: 100px; }
+select.form-control { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+
+/* ---- SECTION HEADING ---- */
+.section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--primary-mid); margin-bottom: 8px; }
+.section-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--dark); line-height: 1.2; }
+.section-title span { color: var(--primary-mid); }
+.section-sub { color: var(--gray); margin-top: 10px; font-size: 15px; }
+.section-center { text-align: center; }
+
+/* ---- BREADCRUMB ---- */
+.breadcrumb-bar { background: var(--white); border-bottom: 1px solid var(--border); }
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray); padding: 14px 0; }
+.breadcrumb a { color: var(--gray); text-decoration: none; }
+.breadcrumb a:hover { color: var(--primary-mid); }
+.breadcrumb .sep { color: var(--gray-light); }
+.breadcrumb .current { color: var(--primary-mid); font-weight: 600; }
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gray-light); }
