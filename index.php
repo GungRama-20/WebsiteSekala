@@ -116,7 +116,7 @@ $paketFeatures = [
     <div class="hero-inner">
 
       <div class="hero-content">
-        <div class="hero-eyebrow">🚀 Platform No. 1 UMKM Bali</div>
+        <div class="hero-eyebrow">🚀 Platform Desain UMKM Bali</div>
         <h1 class="hero-title">
           Platform Paling<br>
           Sederhana untuk<br>
@@ -136,20 +136,6 @@ $paketFeatures = [
               Mulai Request Konten →
             </a>
           <?php endif; ?>
-        </div>
-        <div class="hero-stats">
-          <div class="stat-item">
-            <div class="stat-num">500+</div>
-            <div class="stat-label">Klien Puas</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">1.200+</div>
-            <div class="stat-label">Proyek Selesai</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">4.9★</div>
-            <div class="stat-label">Rating Rata-rata</div>
-          </div>
         </div>
       </div>
 
@@ -361,7 +347,7 @@ $paketFeatures = [
     <div class="footer-inner">
       <div class="footer-brand">
         <div class="footer-logo">
-          <div class="footer-logo-icon">S</div>
+          <div class="image"><img src="assets/Logo3.png" width="30px" height="30px" style="border-radius: 20%"></div>
           <span class="footer-logo-text">SEKALA</span>
         </div>
         <p class="footer-desc">Mewujudkan ide promosi bisnis Anda menjadi konten digital yang nyata, rapi, dan berkualitas. Berakar pada filosofi Bali untuk mendukung transformasi digital UMKM lokal.</p>

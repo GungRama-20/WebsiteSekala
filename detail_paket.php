@@ -235,7 +235,7 @@ if (empty($testimonials)) {
     <div class="footer-inner">
       <div class="footer-brand">
         <div class="footer-logo">
-          <div class="footer-logo-icon">S</div>
+          <div class="image"><img src="assets/Logo3.png" width="30px" height="30px" style="border-radius: 20%"></div>
           <span class="footer-logo-text">SEKALA</span>
         </div>
         <p class="footer-desc">Mewujudkan ide promosi bisnis Anda menjadi konten digital yang nyata, rapi, dan berkualitas. Berakar pada filosofi Bali untuk mendukung transformasi digital UMKM lokal.</p>

@@ -17,7 +17,7 @@ $cp = $current_page ?? '';
 ?>
 <aside class="admin-sidebar" id="adminSidebar">
   <div class="sidebar-brand">
-    <div class="sidebar-logo">S</div>
+    <div class="image"><img src="../assets/Logo3.png" width="30px" height="30px" style="border-radius: 20%"></div>
     <div class="sidebar-brand-text">
       <div class="sidebar-brand-name">SEKALA</div>
       <div class="sidebar-brand-sub">Admin Panel</div>
