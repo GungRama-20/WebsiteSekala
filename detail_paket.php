@@ -273,7 +273,7 @@ if (empty($testimonials)) {
         <ul class="footer-links">
           <li><a href="mailto:hello@sekala.id">hello@sekala.id</a></li>
           <li><a href="https://wa.me/62812345678">WhatsApp</a></li>
-          <li><a href="#">Instagram</a></li>
+          <li><a href="https://www.instagram.com/seka.ladesign/?utm_source=ig_web_button_share_sheet">Instagram</a></li>
         </ul>
       </div>
     </div>
