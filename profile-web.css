@@ -1,0 +1,294 @@
+/* ============================================================
+   profile-web.css — Halaman Profil Website Utama SEKALA
+   ============================================================ */
+
+/* ── Hero Banner ─────────────────────────────────────────── */
+.profile-web-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0F1B2D 0%, #1C4E8C 55%, #2563EB 100%);
+  padding: 52px 0 60px;
+  overflow: hidden;
+}
+.profile-web-hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(59,130,246,.25) 0%, transparent 55%),
+    radial-gradient(circle at 10% 80%, rgba(28,78,140,.35) 0%, transparent 50%);
+  pointer-events: none;
+}
+.profile-web-hero-inner {
+  position: relative;
+  display: flex; align-items: center; gap: 32px;
+}
+
+/* Hero avatar */
+.profile-web-hero-avatar-wrap {
+  position: relative;
+  width: 100px; height: 100px; flex-shrink: 0;
+}
+.profile-web-hero-avatar-img {
+  width: 100px; height: 100px; border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255,255,255,.35);
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.profile-web-hero-avatar-letter {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: linear-gradient(135deg, #1E40AF, #60A5FA);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2.4rem; color: #fff;
+  border: 3px solid rgba(255,255,255,.25);
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.profile-web-photo-overlay {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: rgba(0,0,0,.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; opacity: 0; cursor: pointer;
+  transition: opacity .22s;
+}
+.profile-web-hero-avatar-wrap:hover .profile-web-photo-overlay { opacity: 1; }
+
+.profile-web-hero-info { flex: 1; }
+.profile-web-hero-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.8rem; font-weight: 800; color: #fff;
+  margin-bottom: 8px;
+}
+.profile-web-hero-meta {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.profile-web-hero-email { font-size: 13.5px; color: rgba(255,255,255,.7); }
+.profile-web-hero-sub   { font-size: 13.5px; color: rgba(255,255,255,.6); }
+
+/* Role badges */
+.profile-web-role-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+}
+.admin-badge { background: rgba(124,58,237,.3); color: #DDD6FE; border: 1px solid rgba(167,139,250,.35); }
+.user-badge  { background: rgba(37,99,235,.3);  color: #BFDBFE;  border: 1px solid rgba(147,197,253,.35); }
+
+/* ── Main Section ────────────────────────────────────────── */
+.profile-web-section {
+  padding: 36px 0 80px;
+  background: var(--bg);
+}
+
+/* ── Flash ───────────────────────────────────────────────── */
+.profile-web-flash {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 18px; border-radius: 12px;
+  font-size: 14px; font-weight: 500;
+  margin-bottom: 24px;
+}
+.flash-ok  { background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
+.flash-err { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+
+/* ── Grid ────────────────────────────────────────────────── */
+.profile-web-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── Card Base ───────────────────────────────────────────── */
+.pweb-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: box-shadow .2s;
+}
+.pweb-card:last-child { margin-bottom: 0; }
+.pweb-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.06); }
+
+.pweb-card-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.pweb-card-head-icon {
+  font-size: 20px; width: 42px; height: 42px;
+  background: var(--bg); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.pweb-card-head-title { font-family: 'Sora', sans-serif; font-size: .93rem; font-weight: 700; color: var(--dark); }
+.pweb-card-head-sub   { font-size: 12px; color: var(--gray-light); margin-top: 1px; }
+
+/* ── Identity Photo Card ─────────────────────────────────── */
+.pweb-photo-section {
+  display: flex; align-items: center; gap: 20px;
+  padding: 22px;
+}
+.pweb-photo-wrap {
+  position: relative; width: 88px; height: 88px; flex-shrink: 0;
+}
+.pweb-photo-img {
+  width: 88px; height: 88px; border-radius: 50%; object-fit: cover;
+  border: 3px solid var(--primary-pale);
+}
+.pweb-photo-placeholder {
+  width: 88px; height: 88px; border-radius: 50%;
+  background: linear-gradient(135deg, #1C4E8C, #3B82F6);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; color: #fff;
+  border: 3px solid var(--primary-pale);
+  box-shadow: 0 4px 14px rgba(37,99,235,.22);
+}
+.pweb-photo-overlay {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: rgba(15,27,45,.5);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; opacity: 0; cursor: pointer; transition: opacity .22s;
+}
+.pweb-photo-wrap:hover .pweb-photo-overlay { opacity: 1; }
+.pweb-photo-overlay-icon { font-size: 18px; }
+.pweb-photo-overlay-txt  { font-size: 9px; font-weight: 700; color: #fff; white-space: nowrap; }
+
+.pweb-photo-info { flex: 1; }
+.pweb-photo-name  { font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+.pweb-photo-email { font-size: 12.5px; color: var(--gray); }
+
+/* ── Form ────────────────────────────────────────────────── */
+.pweb-form-body { padding: 22px; }
+
+.pweb-form-group { margin-bottom: 18px; }
+.pweb-form-label {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 600; color: var(--dark-3);
+  margin-bottom: 7px;
+}
+.pweb-vault-badge {
+  margin-left: auto;
+  padding: 2px 9px; border-radius: 999px;
+  background: #F1F5F9; color: #64748B;
+  font-size: 11px; font-weight: 600;
+}
+.pweb-input-wrap { position: relative; }
+.pweb-input {
+  width: 100%; padding: 11px 40px 11px 14px;
+  border: 1.5px solid var(--border); border-radius: 11px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; color: var(--dark); background: var(--white);
+  outline: none; transition: all .2s;
+}
+.pweb-input:focus {
+  border-color: var(--primary-mid);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.09);
+}
+.pweb-input::placeholder { color: var(--gray-light); }
+.pweb-input-icon {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); font-size: 14px; pointer-events: none;
+}
+.pweb-input-wrap.pweb-vault .pweb-input {
+  background: #F8FAFC; color: var(--gray);
+  border-style: dashed; cursor: not-allowed;
+}
+.pweb-hint       { font-size: 11.5px; color: var(--gray-light); margin-top: 4px; }
+.pweb-vault-hint { color: #94A3B8; font-style: italic; }
+
+.pweb-form-actions { display: flex; gap: 12px; margin-top: 22px; }
+.pweb-btn-save {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: 12px;
+  background: linear-gradient(135deg, #1C4E8C, #2563EB);
+  color: #fff; border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37,99,235,.3);
+  transition: all .2s;
+}
+.pweb-btn-save:hover  { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,.4); }
+.pweb-btn-save:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+.pweb-btn-reset {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 18px; border-radius: 12px;
+  background: var(--bg); color: var(--dark-3);
+  border: 1.5px solid var(--border);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all .2s;
+}
+.pweb-btn-reset:hover { border-color: var(--gray-light); background: #F1F5F9; }
+
+/* ── Stats ───────────────────────────────────────────────── */
+.pweb-stats-list { padding: 4px 0; }
+.pweb-stat-item {
+  display: flex; align-items: center; gap: 13px;
+  padding: 13px 22px;
+  border-bottom: 1px solid var(--border);
+  transition: background .18s;
+}
+.pweb-stat-item:last-child { border-bottom: none; }
+.pweb-stat-item:hover { background: var(--bg); }
+.pweb-stat-icon {
+  width: 40px; height: 40px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.pweb-stat-label { font-size: 12px; color: var(--gray); margin-bottom: 2px; }
+.pweb-stat-val   { font-family: 'Sora', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--dark); }
+.pweb-stat-empty { color: #94A3B8; font-style: italic; font-size: 13px; font-family: 'Plus Jakarta Sans',sans-serif; font-weight: 400; }
+
+/* ── Security ────────────────────────────────────────────── */
+.pweb-security-list { padding: 4px 0; }
+.pweb-sec-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 22px; border-bottom: 1px solid var(--border);
+}
+.pweb-sec-item:last-child { border-bottom: none; }
+.pweb-sec-left { display: flex; align-items: center; gap: 12px; }
+.pweb-sec-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.pweb-sec-ok   { background: #D1FAE5; }
+.pweb-sec-warn { background: #FEF3C7; }
+.pweb-sec-title { font-size: 13px; font-weight: 600; color: var(--dark); }
+.pweb-sec-sub   { font-size: 11.5px; color: var(--gray-light); margin-top: 1px; }
+.pweb-sec-badge {
+  font-size: 11.5px; font-weight: 700;
+  padding: 3px 10px; border-radius: 999px;
+}
+.pweb-sec-badge-ok   { background: #D1FAE5; color: #065F46; }
+.pweb-sec-badge-warn { background: #FEF3C7; color: #92400E; }
+
+/* ── Quick Actions ───────────────────────────────────────── */
+.pweb-quick-list { padding: 14px 22px; display: flex; flex-direction: column; gap: 9px; }
+.pweb-quick-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 15px; border-radius: 11px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  text-decoration: none; color: var(--dark-3);
+  font-size: 13.5px; font-weight: 600;
+  transition: all .2s;
+}
+.pweb-quick-btn:hover {
+  border-color: var(--primary-light);
+  background: var(--primary-pale);
+  color: var(--primary); transform: translateX(3px);
+}
+.pweb-quick-admin { color: #7C3AED; }
+.pweb-quick-admin:hover { border-color: #A78BFA; background: #F5F3FF; color: #6D28D9; }
+.pweb-quick-danger { color: var(--danger); }
+.pweb-quick-danger:hover { border-color: var(--danger); background: #FEF2F2; color: var(--danger); transform: translateX(3px); }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .profile-web-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .profile-web-hero-inner { flex-direction: column; text-align: center; }
+  .profile-web-hero-meta  { justify-content: center; }
+  .pweb-photo-section     { flex-direction: column; text-align: center; }
+  .pweb-form-actions      { flex-direction: column; }
+  .pweb-btn-save, .pweb-btn-reset { width: 100%; justify-content: center; }
+}

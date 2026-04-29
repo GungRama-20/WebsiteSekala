@@ -101,24 +101,51 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
 .sidebar-icon  { font-size: 17px; width: 22px; text-align: center; flex-shrink: 0; }
 .sidebar-label { white-space: nowrap; }
 
-/* Footer */
-.sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,.08); }
-.sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin-bottom: 8px; }
+/* Footer & User Card */
+.sidebar-footer { padding: 12px; border-top: 1px solid rgba(255,255,255,.08); }
+
+.sidebar-user-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 12px;
+  cursor: pointer; transition: background .2s;
+  user-select: none;
+}
+.sidebar-user-card:hover, .sidebar-user-card.user-card-open {
+  background: rgba(255,255,255,.06);
+}
 .sidebar-user-avatar {
   width: 36px; height: 36px; border-radius: 50%;
   background: linear-gradient(135deg, #1C4E8C, #3B82F6);
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0;
 }
-.sidebar-user-name { font-size: 13px; font-weight: 600; color: #fff; }
+.sidebar-user-info { flex: 1; min-width: 0; }
+.sidebar-user-name { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sidebar-user-role { font-size: 11px; color: var(--gray-light); }
-.sidebar-logout {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px; border-radius: 10px;
-  text-decoration: none; color: #F87171; font-size: 13px; font-weight: 500;
-  transition: background .2s;
+.sidebar-user-chevron { color: var(--gray-light); transition: transform .25s ease; flex-shrink: 0; }
+
+/* User Menu Dropdown */
+.sidebar-user-menu {
+  display: flex; flex-direction: column; gap: 2px;
+  max-height: 0; overflow: hidden;
+  transition: max-height .3s ease, margin-top .3s ease, padding .3s ease;
+  padding: 0 4px;
 }
-.sidebar-logout:hover { background: rgba(239,68,68,.12); }
+.sidebar-user-menu.open {
+  max-height: 150px; margin-top: 4px; padding-top: 4px; padding-bottom: 4px;
+}
+.sidebar-user-action {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 10px;
+  text-decoration: none; color: var(--gray-light);
+  font-size: 13px; font-weight: 500;
+  transition: all .2s;
+}
+.sidebar-user-action:hover { background: rgba(255,255,255,.07); color: #fff; }
+.sidebar-user-action.sua-active { background: rgba(37,99,235,.18); color: var(--primary-light); font-weight: 600; }
+.sua-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.sua-logout { color: #F87171; }
+.sua-logout:hover { background: rgba(239,68,68,.12); color: #FCA5A5; }
 
 /* ============================================================
    TOPBAR
@@ -350,6 +377,42 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
   transition: border-color .2s;
 }
 .search-input:focus { border-color: var(--primary-mid); }
+
+/* ============================================================
+   SIDEBAR COLLAPSED (DESKTOP)
+   ============================================================ */
+body.sidebar-collapsed { --sidebar-w: 80px; }
+body.sidebar-collapsed .sidebar-brand-text,
+body.sidebar-collapsed .sidebar-label,
+body.sidebar-collapsed .sidebar-user-info,
+body.sidebar-collapsed .sidebar-user-chevron,
+body.sidebar-collapsed .sidebar-user-menu { display: none !important; }
+
+body.sidebar-collapsed .sidebar-desk-toggle .sdt-icon-arrow { display: none; }
+body.sidebar-collapsed .sidebar-desk-toggle .sdt-icon-burger { display: inline-block; font-size: 18px; }
+body.sidebar-collapsed .sidebar-brand { justify-content: center; padding: 24px 0 20px; }
+body.sidebar-collapsed .sidebar-brand .image { display: none; }
+body.sidebar-collapsed .sidebar-desk-toggle { margin: 0 auto; width: 40px; height: 40px; }
+
+body:not(.sidebar-collapsed) .sidebar-desk-toggle .sdt-icon-arrow { display: inline-block; }
+body:not(.sidebar-collapsed) .sidebar-desk-toggle .sdt-icon-burger { display: none; }
+
+.sidebar-desk-toggle {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  color: var(--gray-light); font-size: 13px; cursor: pointer;
+  margin-left: auto; display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px; transition: all .2s;
+  flex-shrink: 0;
+}
+.sidebar-desk-toggle:hover { background: rgba(255,255,255,.15); color: #fff; border-color: rgba(255,255,255,.2); }
+
+/* Center icons when collapsed */
+body.sidebar-collapsed .sidebar-nav { align-items: center; }
+body.sidebar-collapsed .sidebar-link { justify-content: center; padding: 12px; width: 44px; }
+body.sidebar-collapsed .sidebar-icon { font-size: 20px; width: auto; margin: 0; }
+
+body.sidebar-collapsed .sidebar-user-card { justify-content: center; padding: 10px; width: 44px; margin: 0 auto; }
+body.sidebar-collapsed .sidebar-user-avatar { width: 32px; height: 32px; }
 
 /* ============================================================
    PAGINATION
