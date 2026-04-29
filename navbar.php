@@ -58,11 +58,32 @@ function isNavActive($page) {
       <?php if (isLoggedIn()):
         $user = getCurrentUser();
         $initial = strtoupper(mb_substr($user['nama'], 0, 1));
+        
+        // Ambil foto profil terbaru dari database agar selalu sinkron
+        $navFotoProfil = null;
+        if (isset($conn) && !empty($user['id'])) {
+            $stmtNav = $conn->prepare("SELECT foto_profil FROM tb_user WHERE id_user = ?");
+            if ($stmtNav) {
+                $stmtNav->bind_param('i', $user['id']);
+                $stmtNav->execute();
+                $resNav = $stmtNav->get_result()->fetch_assoc();
+                if ($resNav && !empty($resNav['foto_profil'])) {
+                    $navFotoProfil = $resNav['foto_profil'];
+                }
+                $stmtNav->close();
+            }
+        }
       ?>
         <!-- ✅ SUDAH LOGIN: Tampilkan nama + dropdown -->
         <div class="user-dropdown" id="user-dropdown">
           <button class="user-toggle" onclick="toggleUserDropdown()" aria-expanded="false">
-            <div class="user-avatar"><?= htmlspecialchars($initial) ?></div>
+            <div class="user-avatar" style="overflow:hidden; padding:0;">
+              <?php if ($navFotoProfil && file_exists(__DIR__ . '/uploads/' . $navFotoProfil)): ?>
+                <img src="<?= $basePath ?>uploads/<?= htmlspecialchars($navFotoProfil) ?>" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+              <?php else: ?>
+                <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><?= htmlspecialchars($initial) ?></span>
+              <?php endif; ?>
+            </div>
             <span class="user-name"><?= htmlspecialchars($user['nama']) ?></span>
             <svg class="dropdown-chevron" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -461,5 +482,125 @@ window.addEventListener('scroll', function () {
     }
   });
 
+});
+</script>
+
+<!-- ==========================================
+     GLOBAL POPUP MODAL (Untuk Navbar Logout)
+     ========================================== -->
+<div class="pweb-popup-overlay" id="navPopup">
+  <div class="pweb-popup-box">
+    <div class="pweb-popup-icon" id="navPopupIcon">❓</div>
+    <div class="pweb-popup-title" id="navPopupTitle">Konfirmasi</div>
+    <div class="pweb-popup-msg" id="navPopupMsg">Apakah Anda yakin?</div>
+    <div class="pweb-popup-actions" id="navPopupActions">
+      <button class="pweb-popup-btn pweb-popup-cancel" id="navPopupCancel">Batal</button>
+      <button class="pweb-popup-btn pweb-popup-confirm" id="navPopupConfirm">Ya, Yakin</button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ── Custom Popup Navbar ────────────────────────────────────────── */
+.pweb-popup-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 27, 45, 0.65);
+  backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 99999; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.pweb-popup-overlay.show { opacity: 1; pointer-events: auto; }
+.pweb-popup-box {
+  background: #ffffff; width: 90%; max-width: 340px; border-radius: 24px;
+  padding: 32px 28px; text-align: center;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+  transform: scale(0.85) translateY(20px); opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pweb-popup-overlay.show .pweb-popup-box { transform: scale(1) translateY(0); opacity: 1; }
+.pweb-popup-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; margin: 0 auto 18px;
+}
+.pweb-icon-logout  { background: #FEF2F2; color: #DC2626; }
+.pweb-popup-title { font-family: 'Sora', sans-serif; font-size: 1.15rem; font-weight: 800; color: #0F1B2D; margin-bottom: 8px; }
+.pweb-popup-msg { font-size: 13.5px; color: #64748B; line-height: 1.6; margin-bottom: 26px; }
+.pweb-popup-actions { display: flex; gap: 12px; }
+.pweb-popup-btn {
+  flex: 1; padding: 13px 8px; border-radius: 13px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; border: none; transition: all 0.2s ease; outline: none;
+}
+.pweb-popup-cancel { background: #F8FAFC; color: #334155; border: 1.5px solid #E2E8F0; }
+.pweb-popup-cancel:hover { background: #F1F5F9; border-color: #94A3B8; }
+.pweb-btn-logout-confirm {
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%); color: #fff;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+}
+.pweb-btn-logout-confirm:hover {
+  transform: translateY(-2px); box-shadow: 0 6px 22px rgba(239, 68, 68, 0.45);
+}
+</style>
+
+<script>
+let _navConfirmAction = null;
+
+function showNavPopup(type, t, m, confirmCb) {
+  const overlay = document.getElementById('navPopup');
+  const titleEl = document.getElementById('navPopupTitle');
+  const msgEl   = document.getElementById('navPopupMsg');
+  const iconEl  = document.getElementById('navPopupIcon');
+  const cancelEl  = document.getElementById('navPopupCancel');
+  const confirmEl = document.getElementById('navPopupConfirm');
+  if (!overlay) return;
+
+  titleEl.textContent = t;
+  msgEl.textContent   = m;
+  
+  iconEl.innerHTML  = '🚪';
+  iconEl.className  = 'pweb-popup-icon pweb-icon-logout';
+  confirmEl.textContent = 'Ya, Keluar';
+  confirmEl.className   = 'pweb-popup-btn pweb-btn-logout-confirm';
+
+  _navConfirmAction = confirmCb;
+  overlay.classList.add('show');
+}
+
+function hideNavPopup() {
+  const overlay = document.getElementById('navPopup');
+  if (overlay) overlay.classList.remove('show');
+  _navConfirmAction = null;
+}
+
+document.getElementById('navPopupCancel')?.addEventListener('click', hideNavPopup);
+document.getElementById('navPopupConfirm')?.addEventListener('click', () => {
+  if (_navConfirmAction) {
+    const cb = _navConfirmAction;
+    hideNavPopup();
+    cb();
+  }
+});
+
+// Tutup jika klik overlay di luar kotak
+document.getElementById('navPopup')?.addEventListener('click', (e) => {
+  if (e.target === document.getElementById('navPopup')) hideNavPopup();
+});
+
+// Intercept Logout dari Navbar (Desktop & Mobile)
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutLinks = document.querySelectorAll('a[href*="logout.php"]');
+  logoutLinks.forEach(link => {
+    // Jika link ada di dalam profile.php (sudah punya popup sendiri), kita biarkan
+    // Tapi karena profile.php sudah tidak pakai navbar.php, aman.
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetHref = link.getAttribute('href');
+      showNavPopup('logout', 'Keluar Akun?', 'Apakah Anda yakin ingin keluar dari akun Anda?', () => {
+        window.location.href = targetHref;
+      });
+    });
+  });
 });
 </script>

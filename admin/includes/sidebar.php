@@ -38,9 +38,32 @@ $cp = $current_page ?? '';
   </nav>
 
   <!-- ── Footer: User Card dengan dropdown aksi ── -->
+  <?php
+    // Ambil foto profil terbaru dari database agar selalu sinkron dengan halaman profil
+    $sbFotoProfil = null;
+    if (isset($conn) && isset($_SESSION['id_user'])) {
+        $stmtSb = $conn->prepare("SELECT foto_profil FROM tb_user WHERE id_user = ?");
+        if ($stmtSb) {
+            $stmtSb->bind_param('i', $_SESSION['id_user']);
+            $stmtSb->execute();
+            $resSb = $stmtSb->get_result()->fetch_assoc();
+            if ($resSb && !empty($resSb['foto_profil'])) {
+                $sbFotoProfil = $resSb['foto_profil'];
+            }
+            $stmtSb->close();
+        }
+    }
+    $sbInitial = strtoupper(mb_substr($_SESSION['nama'] ?? 'A', 0, 1));
+  ?>
   <div class="sidebar-footer">
     <div class="sidebar-user-card" id="sidebarUserCard" onclick="toggleUserMenu()" role="button" aria-expanded="false">
-      <div class="sidebar-user-avatar"><?= strtoupper(mb_substr($_SESSION['nama'] ?? 'A', 0, 1)) ?></div>
+      <div class="sidebar-user-avatar" style="overflow:hidden; padding:0; background:var(--sidebar-hover);">
+        <?php if ($sbFotoProfil && file_exists(__DIR__ . '/../../uploads/' . $sbFotoProfil)): ?>
+          <img src="../uploads/<?= htmlspecialchars($sbFotoProfil) ?>" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+        <?php else: ?>
+          <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:var(--primary);color:#fff;border-radius:50%;"><?= htmlspecialchars($sbInitial) ?></span>
+        <?php endif; ?>
+      </div>
       <div class="sidebar-user-info">
         <div class="sidebar-user-name"><?= htmlspecialchars($_SESSION['nama'] ?? 'Admin') ?></div>
         <div class="sidebar-user-role">Administrator</div>
@@ -198,3 +221,84 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 </div>
+
+<!-- Scroll to Top Button (Global Admin) -->
+<button id="scrollToTopBtn" class="scroll-to-top" title="Kembali ke atas">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<style>
+/* Scroll to Top Button Styles */
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: var(--primary-mid, #2563EB);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+  cursor: pointer;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+  background: var(--primary, #1C4E8C);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6);
+}
+
+@media (max-width: 768px) {
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+  }
+}
+</style>
+
+<script>
+// Scroll to Top Logic (Global Admin)
+document.addEventListener('DOMContentLoaded', () => {
+  const scrollBtn = document.getElementById('scrollToTopBtn');
+  if (!scrollBtn) return;
+  
+  const mainContent = document.querySelector('.admin-main');
+  const scrollContainer = mainContent || window;
+  
+  scrollContainer.addEventListener('scroll', () => {
+    const scrollPos = scrollContainer.scrollTop || window.scrollY;
+    if (scrollPos > 300) {
+      scrollBtn.classList.add('show');
+    } else {
+      scrollBtn.classList.remove('show');
+    }
+  });
+
+  scrollBtn.addEventListener('click', () => {
+    if(mainContent && mainContent.scrollHeight > mainContent.clientHeight) {
+       mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+});
+</script>

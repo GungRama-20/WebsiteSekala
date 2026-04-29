@@ -9,6 +9,13 @@ require_once 'auth.php';
 // 🔒 PROTEKSI HALAMAN — wajib login
 requireLogin('form_request.php' . (isset($_GET['id_desain']) ? '?id_desain='.(int)$_GET['id_desain'] : ''));
 
+// 🔒 PROTEKSI TAMBAHAN — Admin tidak boleh membuat pesanan
+$currentUser = getCurrentUser();
+if (($currentUser['role'] ?? '') === 'Admin') {
+    setFlash('Admin tidak dapat membuat request konten. Fitur ini hanya untuk pelanggan.', 'error');
+    redirect('detail_paket.php?id=' . (isset($_GET['id_desain']) ? (int)$_GET['id_desain'] : 0));
+}
+
 // Ambil ID desain dari URL
 $id_desain = isset($_GET['id_desain']) ? (int)$_GET['id_desain'] : 0;
 

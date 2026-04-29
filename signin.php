@@ -242,9 +242,9 @@ if ($flash) {
 
   <div class="auth-or">Or</div>
 
-  <!-- Social Login (UI only — perlu integrasi OAuth untuk fungsi nyata) -->
+  <!-- Social Login -->
   <div class="auth-social">
-    <button class="btn-social" type="button" onclick="alert('Fitur Google Login belum tersedia.')">
+    <button class="btn-social" type="button" onclick="window.location.href='google_login.php'">
       <svg width="18" height="18" viewBox="0 0 48 48">
         <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.654 32.657 29.332 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
         <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
@@ -252,12 +252,6 @@ if ($flash) {
         <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a11.96 11.96 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
       </svg>
       Sign in with Google
-    </button>
-    <button class="btn-social" type="button" onclick="alert('Fitur Facebook Login belum tersedia.')">
-      <svg width="18" height="18" viewBox="0 0 48 48">
-        <path fill="#1877F2" d="M48 24C48 10.745 37.255 0 24 0S0 10.745 0 24c0 11.979 8.776 21.908 20.25 23.708V30.938h-6.094V24h6.094v-5.288c0-6.014 3.583-9.337 9.065-9.337 2.625 0 5.372.469 5.372.469v5.907h-3.026c-2.981 0-3.911 1.85-3.911 3.75V24h6.656l-1.063 6.938H27.75v16.77C39.224 45.908 48 35.979 48 24z"/>
-      </svg>
-      Sign in with Facebook
     </button>
   </div>
 

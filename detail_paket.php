@@ -76,9 +76,9 @@ if (empty($testimonials)) {
   <title><?= htmlspecialchars($paket['jenis_desain']) ?> — SEKALA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="pages.css">
-  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="pages.css?v=2">
+  <link rel="stylesheet" href="dashboard.css?v=2">
 </head>
 <body>
 
@@ -106,8 +106,8 @@ if (empty($testimonials)) {
           <img id="gallery-main-img"
                src="assets/poster1.jpeg"
                alt="<?= htmlspecialchars($paket['jenis_desain']) ?> - Preview 1"
-               style="width:100%;height:100%;object-fit:cover;border-radius:20px;display:block;"
-               onerror="this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;background:linear-gradient(135deg,#DBEAFE,#2563EB);display:flex;align-items:center;justify-content:center;border-radius:20px;&quot;><span style=&quot;font-size:80px;&quot;>🎨</span></div>'">
+               style="width:100%;height:auto;object-fit:contain;border-radius:20px;display:block;"
+               onerror="this.parentElement.innerHTML='<div style=&quot;width:100%;aspect-ratio:4/5;background:linear-gradient(135deg,#DBEAFE,#2563EB);display:flex;align-items:center;justify-content:center;border-radius:20px;&quot;><span style=&quot;font-size:80px;&quot;>🎨</span></div>'">
         </div>
         <div class="gallery-thumbs">
           <?php
@@ -164,11 +164,20 @@ if (empty($testimonials)) {
         <!--
           ============================================================
           TOMBOL "Mulai Request Konten"
+          → Jika Admin: tombol di-disable (Hanya untuk pelanggan)
           → Jika BELUM login: redirect ke signin.php
           → Jika SUDAH login: ke form_request.php
           ============================================================
         -->
-        <?php if (isLoggedIn()): ?>
+        <?php 
+          $isUserAdmin = isLoggedIn() && (getCurrentUser()['role'] ?? '') === 'Admin';
+        ?>
+        <?php if ($isUserAdmin): ?>
+          <!-- ❌ Admin → tombol mati -->
+          <button class="btn-request" disabled style="background: #94A3B8; cursor: not-allowed; box-shadow: none; width: 100%;">
+            Mulai Request Konten (Khusus Pelanggan)
+          </button>
+        <?php elseif (isLoggedIn()): ?>
           <!-- ✅ Sudah login → langsung ke form -->
           <a class="btn-request" href="form_request.php?id_desain=<?= $paket['id_desain'] ?>">
             Mulai Request Konten

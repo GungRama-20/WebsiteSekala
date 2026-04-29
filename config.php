@@ -13,6 +13,12 @@ define('DB_CHARSET', 'utf8mb4');
 // ---- Set Timezone WITA (UTC+7 sesuai jam lokal) ----
 date_default_timezone_set('Asia/Jakarta');
 
+// ---- Konfigurasi Login Google (OAuth 2.0) ----
+// Dapatkan Client ID dan Secret di: https://console.cloud.google.com/
+define('GOOGLE_CLIENT_ID', 'masukkan google client id anda disini');
+define('GOOGLE_CLIENT_SECRET', 'masukkan google  client secret anda disini');
+define('GOOGLE_REDIRECT_URI', 'http://localhost/WebsiteSekala/google_callback.php');
+
 // ---- Buat koneksi MySQLi ----
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
