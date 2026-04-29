@@ -12,6 +12,7 @@ $id_user = $_SESSION['id_user'] ?? 0;
 $alterQueries = [
     "ALTER TABLE tb_user ADD COLUMN IF NOT EXISTS no_telp VARCHAR(20) DEFAULT NULL",
     "ALTER TABLE tb_user ADD COLUMN IF NOT EXISTS foto_profil VARCHAR(255) DEFAULT NULL",
+    "ALTER TABLE tb_user ADD COLUMN IF NOT EXISTS alamat TEXT DEFAULT NULL",
     "ALTER TABLE tb_user ADD COLUMN IF NOT EXISTS updated_at DATETIME DEFAULT NULL",
 ];
 foreach ($alterQueries as $q) { @$conn->query($q); }
@@ -31,6 +32,7 @@ if (!$userData) {
         'nama'        => $_SESSION['nama'] ?? 'User',
         'email'       => $_SESSION['email'] ?? '',
         'no_telp'     => '',
+        'alamat'      => '',
         'role'        => $_SESSION['role'] ?? 'Pelanggan',
         'foto_profil' => null,
         'updated_at'  => null,
@@ -38,6 +40,7 @@ if (!$userData) {
 }
 
 $noTelp     = $userData['no_telp']     ?? '';
+$alamat     = $userData['alamat']      ?? '';
 $fotoProfil = $userData['foto_profil'] ?? null;
 $updatedAt  = $userData['updated_at']  ?? null;
 $isAdmin    = ($userData['role'] ?? '') === 'Admin';
@@ -72,16 +75,24 @@ if ($rc) $totalCustomer = $rc->fetch_assoc()['n'] ?? 0;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Profil Saya — SEKALA</title>
+  <title><?= $isAdmin ? 'Profil Admin' : 'Profil Pelanggan' ?> — SEKALA</title>
   <meta name="description" content="Kelola informasi profil dan pengaturan akun SEKALA Anda">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="pages.css">
-  <link rel="stylesheet" href="profile-web.css">
+  <link rel="stylesheet" href="profile-web.css?v=9">
 </head>
 <body>
 
-<?php include 'navbar.php'; ?>
+<!-- Back Bar -->
+<div class="profile-back-bar">
+  <div class="container">
+    <a href="index.php" class="profile-back-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Kembali ke Beranda
+    </a>
+  </div>
+</div>
 
 <!-- Hero Banner -->
 <div class="profile-web-hero">
@@ -121,11 +132,7 @@ if ($rc) $totalCustomer = $rc->fetch_assoc()['n'] ?? 0;
 <section class="profile-web-section">
   <div class="container">
 
-    <?php if ($flash): ?>
-    <div class="profile-web-flash <?= strpos($flash,'berhasil') !== false ? 'flash-ok' : 'flash-err' ?>" id="webFlash">
-      <?= strpos($flash,'berhasil') !== false ? '✅' : '❌' ?> <?= htmlspecialchars($flash) ?>
-    </div>
-    <?php endif; ?>
+    <!-- Flash handled by custom popup script at the bottom -->
 
     <div class="profile-web-grid">
 
@@ -207,18 +214,36 @@ if ($rc) $totalCustomer = $rc->fetch_assoc()['n'] ?? 0;
               <div class="pweb-hint">Nomor telepon aktif untuk kontak</div>
             </div>
 
-            <!-- Email (vault) -->
+            <!-- Alamat -->
+            <?php if (!$isAdmin): ?>
+            <div class="pweb-form-group">
+              <label class="pweb-form-label" for="webAlamat">
+                <span>📍</span> Alamat Lengkap
+              </label>
+              <div class="pweb-input-wrap">
+                <textarea id="webAlamat" name="alamat" class="pweb-input" rows="3"
+                  placeholder="Masukkan alamat lengkap anda"><?= htmlspecialchars($alamat) ?></textarea>
+              </div>
+              <div class="pweb-hint">Alamat pengiriman / penagihan (opsional)</div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Email -->
             <div class="pweb-form-group">
               <label class="pweb-form-label">
                 <span>✉️</span> Alamat Email
-                <span class="pweb-vault-badge">🔒 Terkunci</span>
+                <?php if ($isAdmin): ?><span class="pweb-vault-badge">🔒 Terkunci</span><?php endif; ?>
               </label>
-              <div class="pweb-input-wrap pweb-vault">
-                <input type="email" class="pweb-input pweb-vault-input"
-                  value="<?= htmlspecialchars($userData['email'] ?? '') ?>" readonly tabindex="-1">
-                <span class="pweb-input-icon">🔒</span>
+              <div class="pweb-input-wrap <?= $isAdmin ? 'pweb-vault' : '' ?>">
+                <input type="email" name="email" class="pweb-input <?= $isAdmin ? 'pweb-vault-input' : '' ?>"
+                  value="<?= htmlspecialchars($userData['email'] ?? '') ?>" <?= $isAdmin ? 'readonly tabindex="-1"' : 'required' ?>>
+                <span class="pweb-input-icon"><?= $isAdmin ? '🔒' : '✉️' ?></span>
               </div>
-              <div class="pweb-hint pweb-vault-hint">Email tidak dapat diubah. Hubungi admin untuk perubahan.</div>
+              <?php if ($isAdmin): ?>
+                <div class="pweb-hint pweb-vault-hint">Email admin tidak dapat diubah di sini.</div>
+              <?php else: ?>
+                <div class="pweb-hint">Gunakan email yang aktif untuk notifikasi pesanan</div>
+              <?php endif; ?>
             </div>
 
             <!-- Role (vault) -->
@@ -268,7 +293,7 @@ if ($rc) $totalCustomer = $rc->fetch_assoc()['n'] ?? 0;
                 <div class="pweb-stat-label">Terakhir Update Profil</div>
                 <div class="pweb-stat-val">
                   <?php if ($updatedAt): ?>
-                    <?= date('d M Y, H:i', strtotime($updatedAt)) ?> WIB
+                    <?= date('d M Y, H:i', strtotime($updatedAt)) ?> WITA
                   <?php else: ?>
                     <span class="pweb-stat-empty">Belum pernah diperbarui</span>
                   <?php endif; ?>
@@ -305,7 +330,7 @@ if ($rc) $totalCustomer = $rc->fetch_assoc()['n'] ?? 0;
               <div class="pweb-stat-icon" style="background:#FFF1F2;color:#E11D48;">📅</div>
               <div class="pweb-stat-body">
                 <div class="pweb-stat-label">Sesi Login Aktif</div>
-                <div class="pweb-stat-val"><?= date('d M Y, H:i') ?> WIB</div>
+                <div class="pweb-stat-val"><?= date('d M Y, H:i') ?> WITA</div>
               </div>
             </div>
 
@@ -372,10 +397,10 @@ if ($rc) $totalCustomer = $rc->fetch_assoc()['n'] ?? 0;
             <a href="index.php" class="pweb-quick-btn">🏠 Beranda</a>
             <?php if ($isAdmin): ?>
             <a href="admin/index.php" class="pweb-quick-btn pweb-quick-admin">⚙️ Panel Admin</a>
-            <?php else: ?>
-            <a href="form_request.php" class="pweb-quick-btn">📋 Buat Pesanan</a>
-            <?php endif; ?>
             <a href="semua_testimoni.php" class="pweb-quick-btn">⭐ Testimoni</a>
+            <?php else: ?>
+            <a href="pesanan_saya.php" class="pweb-quick-btn">📋 Pesanan Saya</a>
+            <?php endif; ?>
             <a href="logout.php" class="pweb-quick-btn pweb-quick-danger">🚪 Keluar / Logout</a>
           </div>
         </div>
@@ -384,6 +409,19 @@ if ($rc) $totalCustomer = $rc->fetch_assoc()['n'] ?? 0;
     </div><!-- end .profile-web-grid -->
   </div>
 </section>
+
+<!-- Custom Popup Modal -->
+<div class="pweb-popup-overlay" id="pwebPopup">
+  <div class="pweb-popup-box">
+    <div class="pweb-popup-icon" id="pwebPopupIcon">❓</div>
+    <div class="pweb-popup-title" id="pwebPopupTitle">Konfirmasi</div>
+    <div class="pweb-popup-msg" id="pwebPopupMsg">Apakah Anda yakin?</div>
+    <div class="pweb-popup-actions" id="pwebPopupActions">
+      <button class="pweb-popup-btn pweb-popup-cancel" id="pwebPopupCancel">Batal</button>
+      <button class="pweb-popup-btn pweb-popup-confirm" id="pwebPopupConfirm">Ya, Yakin</button>
+    </div>
+  </div>
+</div>
 
 <script>
 function previewPhotoHero(input) { if(input.files&&input.files[0]) syncPreview(input.files[0]); }
@@ -414,16 +452,112 @@ function syncPreview(file) {
   reader.readAsDataURL(file);
 }
 
-// Auto-hide flash
-const wf = document.getElementById('webFlash');
-if (wf) setTimeout(()=>{ wf.style.transition='opacity .5s'; wf.style.opacity='0'; setTimeout(()=>wf.remove(),500); },4000);
+// ==========================================
+// POPUP MODAL LOGIC
+// ==========================================
+let _confirmAction = null;
 
-// Save loading state
-document.getElementById('webProfileForm')?.addEventListener('submit', function(){
-  const btn=document.getElementById('webBtnSave');
-  btn.innerHTML='<span>⏳</span> Menyimpan...';
-  btn.disabled=true;
+function showPopup(type, t, m, confirmCb) {
+  const overlay = document.getElementById('pwebPopup');
+  const titleEl = document.getElementById('pwebPopupTitle');
+  const msgEl   = document.getElementById('pwebPopupMsg');
+  const iconEl  = document.getElementById('pwebPopupIcon');
+  const cancelEl  = document.getElementById('pwebPopupCancel');
+  const confirmEl = document.getElementById('pwebPopupConfirm');
+  if (!overlay) return;
+
+  titleEl.textContent = t;
+  msgEl.textContent   = m;
+  confirmEl.style.display = 'block';
+  cancelEl.style.display  = 'block';
+
+  if (type === 'save') {
+    iconEl.innerHTML  = '💾';
+    iconEl.className  = 'pweb-popup-icon pweb-icon-save';
+    confirmEl.textContent = 'Ya, Simpan';
+    confirmEl.className   = 'pweb-popup-btn pweb-btn-save-confirm';
+  } else if (type === 'logout') {
+    iconEl.innerHTML  = '🚪';
+    iconEl.className  = 'pweb-popup-icon pweb-icon-logout';
+    confirmEl.textContent = 'Ya, Keluar';
+    confirmEl.className   = 'pweb-popup-btn pweb-btn-logout-confirm';
+  } else if (type === 'success') {
+    iconEl.innerHTML  = '✅';
+    iconEl.className  = 'pweb-popup-icon pweb-icon-success';
+    confirmEl.textContent = 'Tutup';
+    confirmEl.className   = 'pweb-popup-btn pweb-btn-save-confirm';
+    cancelEl.style.display = 'none';
+  } else {
+    iconEl.innerHTML  = 'ℹ️';
+    iconEl.className  = 'pweb-popup-icon pweb-icon-error';
+    confirmEl.textContent = 'Tutup';
+    confirmEl.className   = 'pweb-popup-btn pweb-btn-save-confirm';
+    cancelEl.style.display = 'none';
+  }
+
+  _confirmAction = confirmCb;
+  overlay.classList.add('show');
+}
+
+function hidePopup() {
+  const overlay = document.getElementById('pwebPopup');
+  if (overlay) overlay.classList.remove('show');
+  _confirmAction = null;
+}
+
+document.getElementById('pwebPopupCancel')?.addEventListener('click', hidePopup);
+document.getElementById('pwebPopupConfirm')?.addEventListener('click', () => {
+  if (_confirmAction) {
+    const cb = _confirmAction;
+    hidePopup();
+    cb();
+  } else {
+    hidePopup();
+  }
 });
+
+// Tutup jika klik overlay di luar kotak
+document.getElementById('pwebPopup')?.addEventListener('click', (e) => {
+  if (e.target === document.getElementById('pwebPopup')) hidePopup();
+});
+
+// 1. Intercept Form Submit
+const form = document.getElementById('webProfileForm');
+if (form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    showPopup('save', 'Simpan Perubahan?', 'Apakah Anda yakin ingin menyimpan perubahan profil Anda?', () => {
+      const btnSave = document.getElementById('webBtnSave');
+      if (btnSave) { btnSave.innerHTML = '⏳ Menyimpan...'; btnSave.disabled = true; }
+      form.submit();
+    });
+  });
+}
+
+// 2. Intercept Logout
+document.querySelectorAll('a[href="logout.php"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    showPopup('logout', 'Keluar Akun?', 'Apakah Anda yakin ingin keluar dari akun Anda?', () => {
+      window.location.href = 'logout.php';
+    });
+  });
+});
+
+// 3. Flash Message (ditampilkan setelah redirect)
+<?php if ($flash): ?>
+  setTimeout(() => {
+    if (typeof showPopup === 'function') {
+      <?php if (strpos(strtolower($flash), 'berhasil') !== false): ?>
+        showPopup('success', 'Berhasil!', '<?= htmlspecialchars($flash) ?>', null);
+      <?php else: ?>
+        showPopup('error', 'Informasi', '<?= htmlspecialchars($flash) ?>', null);
+      <?php endif; ?>
+    } else {
+      alert('<?= htmlspecialchars($flash) ?>');
+    }
+  }, 100);
+<?php endif; ?>
 </script>
 </body>
 </html>

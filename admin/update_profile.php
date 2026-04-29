@@ -104,9 +104,9 @@ if ($stmt && $stmt->execute()) {
     // Update session
     $_SESSION['nama']    = $nama;
     $_SESSION['no_telp'] = $noTelp;
-    $_SESSION['profile_msg'] = 'Profil berhasil diperbarui!';
+    $_SESSION['profile_msg'] = 'Anda sudah berhasil menyimpan perubahan.';
 } else {
-    $_SESSION['profile_msg'] = 'Gagal memperbarui profil: ' . $conn->error;
+    $_SESSION['profile_msg'] = 'Gagal menyimpan perubahan profil: ' . $conn->error;
 }
 
 if ($stmt) $stmt->close();

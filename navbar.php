@@ -42,13 +42,13 @@ function isNavActive($page) {
         <?php endif; ?>
       </li>
       <li class="nav-item" data-section="section-paket">
-        <a href="#section-paket" onclick="smoothScroll('section-paket')">Paket</a>
+        <a href="index.php#section-paket" onclick="smoothScroll('section-paket')">Paket</a>
       </li>
       <li class="nav-item" data-section="section-portofolio">
-        <a href="#section-portofolio" onclick="smoothScroll('section-portofolio')">Portofolio</a>
+        <a href="index.php#section-portofolio" onclick="smoothScroll('section-portofolio')">Portofolio</a>
       </li>
       <li class="nav-item" data-section="section-kontak">
-        <a href="#section-kontak" onclick="smoothScroll('section-kontak')">Kontak</a>
+        <a href="index.php#section-kontak" onclick="smoothScroll('section-kontak')">Kontak</a>
       </li>
     </ul>
 

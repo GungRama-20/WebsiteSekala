@@ -67,7 +67,7 @@ $lastLogin = $_SESSION['last_login'] ?? date('Y-m-d H:i:s');
   <title>Profil Admin — SEKALA</title>
   <meta name="description" content="Kelola informasi profil dan pengaturan akun admin SEKALA">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/admin.css?v=2">
+  <link rel="stylesheet" href="assets/admin.css?v=3">
   <link rel="stylesheet" href="assets/profile.css">
 </head>
 <body>
@@ -100,12 +100,7 @@ $lastLogin = $_SESSION['last_login'] ?? date('Y-m-d H:i:s');
         </div>
       </div>
 
-      <!-- Flash Message -->
-      <?php if ($flash): ?>
-      <div class="admin-flash <?= strpos($flash,'berhasil') !== false ? 'success' : 'error' ?>" id="flashMsg">
-        <?= strpos($flash,'berhasil') !== false ? '✅' : '❌' ?> <?= htmlspecialchars($flash) ?>
-      </div>
-      <?php endif; ?>
+      <!-- Flash handled by custom popup script -->
 
       <!-- Main Grid -->
       <div class="profile-grid">
@@ -276,7 +271,7 @@ $lastLogin = $_SESSION['last_login'] ?? date('Y-m-d H:i:s');
                   <div class="acc-stat-label">Terakhir Update Profil</div>
                   <div class="acc-stat-value">
                     <?php if ($updatedAt): ?>
-                      <?= date('d M Y, H:i', strtotime($updatedAt)) ?> WIB
+                      <?= date('d M Y, H:i', strtotime($updatedAt)) ?> WITA
                     <?php else: ?>
                       <span style="color:#94A3B8;font-style:italic;font-size:13px;">Belum pernah diperbarui</span>
                     <?php endif; ?>
@@ -316,7 +311,7 @@ $lastLogin = $_SESSION['last_login'] ?? date('Y-m-d H:i:s');
                 <div class="acc-stat-icon" style="background:#FFF1F2; color:#E11D48;">📅</div>
                 <div class="acc-stat-body">
                   <div class="acc-stat-label">Sesi Login Aktif</div>
-                  <div class="acc-stat-value"><?= date('d M Y, H:i') ?> WIB</div>
+                  <div class="acc-stat-value"><?= date('d M Y, H:i') ?> WITA</div>
                 </div>
               </div>
 
@@ -458,9 +453,41 @@ if (flash) {
 // Save button loading state
 document.getElementById('profileForm')?.addEventListener('submit', function() {
   const btn = document.getElementById('btnSave');
-  btn.innerHTML = '<span class="btn-icon">⏳</span> Menyimpan...';
-  btn.disabled = true;
 });
+</script>
+
+<script>
+// 1. Intercept Profile Form Submit
+const form = document.getElementById('profileForm');
+if (form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (typeof showPopup === 'function') {
+      showPopup('save', 'Simpan Perubahan?', 'Apakah Anda yakin ingin menyimpan perubahan pada profil Anda?', () => {
+        // Tampilkan state loading
+        const btnSave = document.getElementById('btnSave');
+        form.submit();
+      });
+    } else {
+      form.submit();
+    }
+  });
+}
+
+// 2. Handle Flash Messages via PHP
+<?php if ($flash): ?>
+  setTimeout(() => {
+    if (typeof showPopup === 'function') {
+      <?php if (strpos(strtolower($flash), 'berhasil') !== false): ?>
+        showPopup('success', 'Berhasil!', '<?= htmlspecialchars($flash) ?>', null);
+      <?php else: ?>
+        showPopup('error', 'Informasi', '<?= htmlspecialchars($flash) ?>', null);
+      <?php endif; ?>
+    } else {
+      alert('<?= htmlspecialchars($flash) ?>');
+    }
+  }, 100);
+<?php endif; ?>
 </script>
 </body>
 </html>

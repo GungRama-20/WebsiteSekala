@@ -10,6 +10,9 @@ define('DB_PASS', '');           // Ganti dengan password MySQL Anda
 define('DB_NAME', 'sekala');
 define('DB_CHARSET', 'utf8mb4');
 
+// ---- Set Timezone WITA (UTC+7 sesuai jam lokal) ----
+date_default_timezone_set('Asia/Jakarta');
+
 // ---- Buat koneksi MySQLi ----
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 

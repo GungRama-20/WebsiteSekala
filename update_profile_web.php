@@ -9,8 +9,12 @@ requireLogin();
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: profile.php'); exit; }
 
 $id_user = $_SESSION['id_user'] ?? 0;
+$isAdmin = ($_SESSION['role'] ?? '') === 'Admin';
+
 $nama    = trim($_POST['nama'] ?? '');
 $noTelp  = trim($_POST['no_telp'] ?? '');
+$alamat  = trim($_POST['alamat'] ?? '');
+$email   = trim($_POST['email'] ?? '');
 
 if (empty($nama)) {
     $_SESSION['profile_msg'] = 'Nama lengkap tidak boleh kosong.';
@@ -58,20 +62,51 @@ if (!empty($_FILES['foto_profil']['name']) && $_FILES['foto_profil']['error'] ==
 }
 
 $now = date('Y-m-d H:i:s');
-if ($fotoProfil) {
-    $stmt = $conn->prepare("UPDATE tb_user SET nama=?, no_telp=?, foto_profil=?, updated_at=? WHERE id_user=?");
-    $stmt->bind_param("ssssi", $nama, $noTelp, $fotoProfil, $now, $id_user);
+
+if ($isAdmin) {
+    if ($fotoProfil) {
+        $stmt = $conn->prepare("UPDATE tb_user SET nama=?, no_telp=?, foto_profil=?, updated_at=? WHERE id_user=?");
+        $stmt->bind_param("ssssi", $nama, $noTelp, $fotoProfil, $now, $id_user);
+    } else {
+        $stmt = $conn->prepare("UPDATE tb_user SET nama=?, no_telp=?, updated_at=? WHERE id_user=?");
+        $stmt->bind_param("sssi", $nama, $noTelp, $now, $id_user);
+    }
 } else {
-    $stmt = $conn->prepare("UPDATE tb_user SET nama=?, no_telp=?, updated_at=? WHERE id_user=?");
-    $stmt->bind_param("sssi", $nama, $noTelp, $now, $id_user);
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['profile_msg'] = 'Format email tidak valid.';
+        header('Location: profile.php'); exit;
+    }
+    if ($fotoProfil) {
+        $stmt = $conn->prepare("UPDATE tb_user SET nama=?, email=?, no_telp=?, alamat=?, foto_profil=?, updated_at=? WHERE id_user=?");
+        $stmt->bind_param("ssssssi", $nama, $email, $noTelp, $alamat, $fotoProfil, $now, $id_user);
+    } else {
+        $stmt = $conn->prepare("UPDATE tb_user SET nama=?, email=?, no_telp=?, alamat=?, updated_at=? WHERE id_user=?");
+        $stmt->bind_param("sssssi", $nama, $email, $noTelp, $alamat, $now, $id_user);
+    }
 }
 
 if ($stmt && $stmt->execute()) {
+    $old_email = $_SESSION['email'] ?? '';
+    
     $_SESSION['nama']    = $nama;
     $_SESSION['no_telp'] = $noTelp;
-    $_SESSION['profile_msg'] = 'Profil berhasil diperbarui!';
+    
+    if (!$isAdmin) {
+        $_SESSION['email'] = $email;
+        
+        // SINKRONISASI KE tb_pelanggan
+        // Mengupdate data customer di halaman admin agar selalu sinkron
+        $stmtSync = $conn->prepare("UPDATE tb_pelanggan SET nama=?, email=?, no_hp=?, alamat=? WHERE email=?");
+        if ($stmtSync) {
+            $stmtSync->bind_param("sssss", $nama, $email, $noTelp, $alamat, $old_email);
+            $stmtSync->execute();
+            $stmtSync->close();
+        }
+    }
+    
+    $_SESSION['profile_msg'] = 'Anda sudah berhasil menyimpan perubahan.';
 } else {
-    $_SESSION['profile_msg'] = 'Gagal memperbarui profil.';
+    $_SESSION['profile_msg'] = 'Gagal menyimpan perubahan profil.';
 }
 if ($stmt) $stmt->close();
 header('Location: profile.php'); exit;

@@ -108,4 +108,93 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('sidebar-collapsed');
   }
 });
+
+// ==========================================
+// CUSTOM POPUP MODAL LOGIC (GLOBAL ADMIN)
+// ==========================================
+let confirmAction = null;
+
+function showPopup(type, t, m, confirmCb) {
+  const popup = document.getElementById('pwebPopup');
+  const title = document.getElementById('pwebPopupTitle');
+  const msg = document.getElementById('pwebPopupMsg');
+  const icon = document.getElementById('pwebPopupIcon');
+  const btnCancel = document.getElementById('pwebPopupCancel');
+  const btnConfirm = document.getElementById('pwebPopupConfirm');
+
+  if (!popup) return;
+
+  title.textContent = t;
+  msg.textContent = m;
+  btnConfirm.style.display = 'block';
+  btnCancel.style.display = 'block';
+  
+  if (type === 'save') {
+    icon.innerHTML = '💾';
+    icon.className = 'pweb-popup-icon pweb-icon-save';
+    btnConfirm.textContent = 'Ya, Simpan';
+    btnConfirm.className = 'pweb-popup-btn pweb-btn-save-confirm';
+  } else if (type === 'logout') {
+    icon.innerHTML = '🚪';
+    icon.className = 'pweb-popup-icon pweb-icon-logout';
+    btnConfirm.textContent = 'Ya, Keluar';
+    btnConfirm.className = 'pweb-popup-btn pweb-btn-logout-confirm';
+  } else if (type === 'success' || type === 'error') {
+    icon.innerHTML = type === 'success' ? '✅' : 'ℹ️';
+    icon.className = 'pweb-popup-icon ' + (type === 'success' ? 'pweb-icon-success' : 'pweb-icon-save');
+    btnConfirm.textContent = 'Tutup';
+    btnConfirm.className = 'pweb-popup-btn pweb-btn-save-confirm';
+    btnCancel.style.display = 'none';
+  }
+  
+  confirmAction = confirmCb;
+  popup.classList.add('show');
+}
+
+function hidePopup() {
+  const popup = document.getElementById('pwebPopup');
+  if (popup) popup.classList.remove('show');
+  setTimeout(() => { confirmAction = null; }, 300);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnCancel = document.getElementById('pwebPopupCancel');
+  const btnConfirm = document.getElementById('pwebPopupConfirm');
+
+  if (btnCancel) btnCancel.addEventListener('click', hidePopup);
+  if (btnConfirm) btnConfirm.addEventListener('click', () => {
+    if (confirmAction) {
+      const cb = confirmAction;
+      hidePopup();
+      cb();
+    } else {
+      hidePopup();
+    }
+  });
+
+  // Intercept Global Admin Logout Links
+  const logoutLinks = document.querySelectorAll('a[href="logout.php"], a[href="../logout.php"]');
+  logoutLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetHref = link.getAttribute('href');
+      showPopup('logout', 'Keluar Akun?', 'Apakah Anda yakin ingin keluar dari halaman admin?', () => {
+        window.location.href = targetHref;
+      });
+    });
+  });
+});
 </script>
+
+<!-- Custom Popup Modal -->
+<div class="pweb-popup-overlay" id="pwebPopup">
+  <div class="pweb-popup-box">
+    <div class="pweb-popup-icon" id="pwebPopupIcon">❓</div>
+    <div class="pweb-popup-title" id="pwebPopupTitle">Konfirmasi</div>
+    <div class="pweb-popup-msg" id="pwebPopupMsg">Apakah Anda yakin?</div>
+    <div class="pweb-popup-actions" id="pwebPopupActions">
+      <button class="pweb-popup-btn pweb-popup-cancel" id="pwebPopupCancel">Batal</button>
+      <button class="pweb-popup-btn pweb-popup-confirm" id="pwebPopupConfirm">Ya, Yakin</button>
+    </div>
+  </div>
+</div>
