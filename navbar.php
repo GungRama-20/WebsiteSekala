@@ -103,7 +103,7 @@ function isNavActive($page) {
               <span class="item-icon">👤</span> Profile
             </a>
             <?php if (($user['role'] ?? '') !== 'Admin'): ?>
-            <a class="dropdown-item" href="<?= $basePath ?>pesanan_saya.php">
+            <a class="dropdown-item" href="<?= $basePath ?>halaman_pesanan_saya.php">
               <span class="item-icon">📋</span> Pesanan Saya
             </a>
             <?php endif; ?>

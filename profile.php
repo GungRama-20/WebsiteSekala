@@ -399,7 +399,7 @@ if ($rc) $totalCustomer = $rc->fetch_assoc()['n'] ?? 0;
             <a href="admin/index.php" class="pweb-quick-btn pweb-quick-admin">⚙️ Panel Admin</a>
             <a href="semua_testimoni.php" class="pweb-quick-btn">⭐ Testimoni</a>
             <?php else: ?>
-            <a href="pesanan_saya.php" class="pweb-quick-btn">📋 Pesanan Saya</a>
+            <a href="halaman_pesanan_saya.php" class="pweb-quick-btn">📋 Pesanan Saya</a>
             <?php endif; ?>
             <a href="logout.php" class="pweb-quick-btn pweb-quick-danger">🚪 Keluar / Logout</a>
           </div>

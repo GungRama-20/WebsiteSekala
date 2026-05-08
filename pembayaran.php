@@ -23,6 +23,18 @@ $stmt->close();
 
 if (!$pesanan) { setFlash('Pesanan tidak ditemukan.', 'error'); redirect('index.php'); }
 
+// Cek apakah pembayaran sudah ada
+$stmtCek = $conn->prepare("SELECT id_pembayaran, status_pembayaran FROM tb_pembayaran WHERE id_pesanan = ? ORDER BY id_pembayaran DESC LIMIT 1");
+$stmtCek->bind_param('i', $id_pesanan);
+$stmtCek->execute();
+$cekBayar = $stmtCek->get_result()->fetch_assoc();
+$stmtCek->close();
+
+if ($cekBayar && $cekBayar['status_pembayaran'] !== 'ditolak') {
+    setFlash('Pesanan ini sudah memiliki data pembayaran ('.$cekBayar['status_pembayaran'].').', 'info');
+    redirect('halaman_pesanan_saya.php');
+}
+
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
