@@ -15,9 +15,29 @@ date_default_timezone_set('Asia/Jakarta');
 
 // ---- Konfigurasi Login Google (OAuth 2.0) ----
 // Dapatkan Client ID dan Secret di: https://console.cloud.google.com/
-define('GOOGLE_CLIENT_ID', 'masukkan google client id anda disini');
-define('GOOGLE_CLIENT_SECRET', 'masukkan google  client secret anda disini');
-define('GOOGLE_REDIRECT_URI', 'http://localhost/WebsiteSekala/google_callback.php');
+// ⚠️ GANTI dengan Client ID & Secret dari Google Cloud Console Anda!
+define('GOOGLE_CLIENT_ID',     'GANTI_DENGAN_CLIENT_ID_GOOGLE_ANDA');
+define('GOOGLE_CLIENT_SECRET', 'GANTI_DENGAN_CLIENT_SECRET_GOOGLE_ANDA');
+
+// ---- Deteksi Environment (localhost vs production) ----
+$isLocalhost = (
+    isset($_SERVER['HTTP_HOST']) &&
+    (
+        $_SERVER['HTTP_HOST'] === 'localhost' ||
+        strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false ||
+        strpos($_SERVER['HTTP_HOST'], 'localhost') !== false
+    )
+);
+
+if ($isLocalhost) {
+    // Redirect URI untuk development local
+    define('GOOGLE_REDIRECT_URI', 'http://localhost/WebsiteSekala/google_callback.php');
+    define('BASE_URL', 'http://localhost/WebsiteSekala/');
+} else {
+    // Redirect URI untuk production (domain hosting)
+    define('GOOGLE_REDIRECT_URI', 'http://sekaladesain.free.nf/google_callback.php');
+    define('BASE_URL', 'http://sekaladesain.free.nf/');
+}
 
 // ---- Buat koneksi MySQLi ----
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
