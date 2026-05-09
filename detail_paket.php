@@ -74,6 +74,7 @@ if (empty($testimonials)) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><?= htmlspecialchars($paket['jenis_desain']) ?> — SEKALA</title>
+  <link rel="icon" type="image/png" href="assets/Logo3.png" style="border-radius: 50%; width: 32px; height: 32px;">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=2">
@@ -238,58 +239,6 @@ if (empty($testimonials)) {
   </div>
 </section>
 
-<!-- FOOTER / KONTAK -->
-<footer class="footer" id="section-kontak">
-  <div class="container">
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <div class="image"><img src="assets/Logo3.png" width="30px" height="30px" style="border-radius: 20%"></div>
-          <span class="footer-logo-text">SEKALA</span>
-        </div>
-        <p class="footer-desc">Mewujudkan ide promosi bisnis Anda menjadi konten digital yang nyata, rapi, dan berkualitas. Berakar pada filosofi Bali untuk mendukung transformasi digital UMKM lokal.</p>
-        <div class="footer-cta-label">Bingung Mau Mulai Dari Mana?</div>
-        <div class="footer-email-wrap">
-          <input type="email" placeholder="Masukan email untuk konsultasi gratis...">
-          <button class="footer-email-btn" type="button">→</button>
-        </div>
-      </div>
-      <div>
-        <div class="footer-col-title">Navigasi</div>
-        <ul class="footer-links">
-          <li><a href="index.php">Home</a></li>
-          <li><a href="index.php#section-how">Cara Kerja</a></li>
-          <li><a href="index.php#section-paket">Paket</a></li>
-          <li><a href="index.php#section-portofolio">Portofolio</a></li>
-          <?php if (isLoggedIn()): ?>
-            <li><a href="logout.php">Logout</a></li>
-          <?php else: ?>
-            <li><a href="signin.php">Masuk</a></li>
-          <?php endif; ?>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-col-title">Layanan Kami</div>
-        <ul class="footer-links">
-          <li><a href="#">Poster &amp; Visual</a></li>
-          <li><a href="#">Social Media Feed</a></li>
-          <li><a href="#">Video Pendek</a></li>
-          <li><a href="#">Custom Project</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-col-title">Hubungi Kami</div>
-        <ul class="footer-links">
-          <li><a href="mailto:hello@sekala.id">hello@sekala.id</a></li>
-          <li><a href="https://wa.me/62812345678">WhatsApp</a></li>
-          <li><a href="https://www.instagram.com/seka.ladesign/?utm_source=ig_web_button_share_sheet">Instagram</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">© 2025 SEKALA. All rights reserved.</div>
-</footer>
-
 <!-- FORM TESTIMONI CUSTOMER -->
 <?php
 // Cek apakah user login dan punya pesanan untuk paket ini
@@ -416,6 +365,60 @@ function switchThumb(idx) {
   }
 }
 </script>
+
+<!-- FOOTER / KONTAK -->
+<footer class="footer" id="section-kontak">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="image"><img src="assets/Logo3.png" width="30px" height="30px" style="border-radius: 20%"></div>
+          <span class="footer-logo-text">SEKALA</span>
+        </div>
+        <p class="footer-desc">Mewujudkan ide promosi bisnis Anda menjadi konten digital yang nyata, rapi, dan berkualitas. Berakar pada filosofi Bali untuk mendukung transformasi digital UMKM lokal.</p>
+        <div class="footer-cta-label">Bingung Mau Mulai Dari Mana?</div>
+        <div class="footer-email-wrap">
+          <input type="email" placeholder="Masukan email untuk konsultasi gratis...">
+          <button class="footer-email-btn" type="button">→</button>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigasi</div>
+        <ul class="footer-links">
+          <li><a href="index.php">Home</a></li>
+          <li><a href="index.php#section-how">Cara Kerja</a></li>
+          <li><a href="index.php#section-paket">Paket</a></li>
+          <li><a href="index.php#section-portofolio">Portofolio</a></li>
+          <?php if (isLoggedIn()): ?>
+            <li><a href="logout.php">Logout</a></li>
+          <?php else: ?>
+            <li><a href="signin.php">Masuk</a></li>
+          <?php endif; ?>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Layanan Kami</div>
+        <ul class="footer-links">
+          <li><a href="#">Poster &amp; Visual</a></li>
+          <li><a href="#">Social Media Feed</a></li>
+          <li><a href="#">Video Pendek</a></li>
+          <li><a href="#">Custom Project</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Hubungi Kami</div>
+        <ul class="footer-links">
+          <li><a href="mailto:desainsekala@gmail.com">desainsekala@gmail.com</a></li>
+          <li><a href="https://wa.me/62812345678">WhatsApp</a></li>
+          <li><a href="https://www.instagram.com/seka.ladesign/?utm_source=ig_web_button_share_sheet">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 SEKALA. All rights reserved.</div>
+</footer>
+
+
 <script src="assets/js/main.js"></script>
 </body>
 </html>

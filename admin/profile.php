@@ -65,6 +65,7 @@ $lastLogin = $_SESSION['last_login'] ?? date('Y-m-d H:i:s');
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Profil Admin — SEKALA</title>
+  <link rel="icon" type="image/png" href="../assets/Logo3.png" style="border-radius: 50%; width: 32px; height: 32px;">
   <meta name="description" content="Kelola informasi profil dan pengaturan akun admin SEKALA">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/admin.css?v=3">

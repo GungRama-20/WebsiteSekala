@@ -90,6 +90,7 @@ $paketFeatures = [
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SEKALA — Platform Konten Digital UMKM</title>
+  <link rel="icon" type="image/png" href="assets/Logo3.png" style="border-radius: 50%; width: 32px; height: 32px;">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -383,7 +384,7 @@ $paketFeatures = [
       <div>
         <div class="footer-col-title">Hubungi Kami</div>
         <ul class="footer-links">
-          <li><a href="mailto:hello@sekala.id">hello@sekala.id</a></li>
+          <li><a href="mailto:desainsekala@gmail.com">desainsekala@gmail.com</a></li>
           <li><a href="https://wa.me/62812345678">WhatsApp</a></li>
           <li><a href="https://www.instagram.com/seka.ladesign/?utm_source=ig_web_button_share_sheet">Instagram</a></li>
         </ul>
