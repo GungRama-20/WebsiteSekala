@@ -112,8 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--white); color: var(--dark);
-      min-height: 100vh; display: flex; align-items: center;
-      justify-content: center; padding: 40px 20px;
+      min-height: 100vh; display: flex; align-items: flex-start;
+      justify-content: center; padding: 60px 20px 40px 20px;
     }
     .auth-box { width: 100%; max-width: 480px; }
 

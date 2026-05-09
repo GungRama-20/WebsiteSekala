@@ -603,4 +603,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+<?php if (!isLoggedIn() || (getCurrentUser()['role'] ?? '') !== 'Admin'): ?>
+// --- Visitor Tracker ---
+(function() {
+    const path = window.location.pathname;
+    let pageName = 'Lainnya';
+    if (path.includes('index.php') || path === '/' || path.endsWith('/WebsiteSekala/')) pageName = 'Home';
+    else if (path.includes('detail_paket.php')) pageName = 'Detail';
+    else if (path.includes('semua_testimoni.php') || path.includes('testimoni')) pageName = 'Testimoni';
+    else if (path.includes('profile.php')) pageName = 'Profile';
+    else if (path.includes('pembayaran.php') || path.includes('halaman_pesanan_saya.php') || path.includes('selesai.php')) pageName = 'Pesanan';
+
+    let visitId = null;
+    let startTime = Date.now();
+
+    function sendBeacon(action, extra = {}) {
+        const data = Object.assign({ action: action, halaman: pageName }, extra);
+        if (navigator.sendBeacon) {
+            navigator.sendBeacon('<?= $basePath ?>track_visit.php', JSON.stringify(data));
+        } else {
+            fetch('<?= $basePath ?>track_visit.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+                keepalive: true
+            });
+        }
+    }
+
+    fetch('<?= $basePath ?>track_visit.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start', halaman: pageName })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data && data.id) visitId = data.id;
+    }).catch(e => console.error(e));
+
+    const updateTime = () => {
+        if (visitId) {
+            const currentDur = Math.floor((Date.now() - startTime) / 1000);
+            sendBeacon('update', { id: visitId, durasi: currentDur });
+        }
+    };
+
+    window.addEventListener('beforeunload', updateTime);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') updateTime();
+    });
+})();
+<?php endif; ?>
 </script>

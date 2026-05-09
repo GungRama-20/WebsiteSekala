@@ -142,8 +142,8 @@ $paketFeatures = [
 
       <div class="hero-visual">
         <div class="hero-img-wrap">
-          <div class="image"><img src="assets/foto1-removebg-preview.png" width="500px" height="auto" top="-50px"></div>
-            </div>
+          <div class="image"><img src="assets/foto1-removebg-preview.png" width="500px" height="auto" style="margin-top: -60px;"></div>
+        </div>
           </div>
           </div>
           <div class="hero-stars">
@@ -178,7 +178,7 @@ $paketFeatures = [
   <div class="container">
     <div class="how-inner">
       <div class="how-img-side">
-        <div class="image"><img src="assets/foto2-removebg-preview.png" width="400px" height="auto"></div>
+        <div class="image"><img src="assets/foto2-removebg.png" width="400px" height="auto" style="mix-blend-mode: multiply;"></div>
       </div>
       <div class="how-content">
         <div class="how-head">

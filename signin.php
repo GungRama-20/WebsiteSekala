@@ -104,9 +104,9 @@ if ($flash) {
       color: var(--dark);
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 40px 20px;
+      padding: 60px 20px 40px 20px;
     }
 
     /* ---- AUTH BOX ---- */

@@ -11,6 +11,7 @@ $menu = [
     ['icon'=>'🎨','label'=>'Data Portofolio',  'href'=>'portofolio.php',   'key'=>'portofolio'],
     ['icon'=>'⭐','label'=>'Data Testimoni',   'href'=>'testimoni.php',    'key'=>'testimoni'],
     ['icon'=>'📊','label'=>'Laporan',          'href'=>'laporan.php',      'key'=>'laporan'],
+    ['icon'=>'📈','label'=>'Data Pengunjung',  'href'=>'pengunjung.php',   'key'=>'pengunjung'],
     ['icon'=>'🛡️','label'=>'Kelola Admin',    'href'=>'kelola_admin.php', 'key'=>'kelola_admin'],
 ];
 $cp = $current_page ?? '';
