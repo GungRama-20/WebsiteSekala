@@ -310,7 +310,7 @@ document.getElementById('testi-text-st')?.addEventListener('input', function() {
       <div>
         <div class="footer-col-title">Hubungi Kami</div>
         <ul class="footer-links">
-          <li><a href="mailto:hello@sekala.id">hello@sekala.id</a></li>
+          <li><a href="mailto:desainsekala@gmail.com">desainsekala@gmail.com</a></li>
           <li><a href="https://wa.me/62812345678">WhatsApp</a></li>
           <li><a href="https://www.instagram.com/seka.ladesign/?utm_source=ig_web_button_share_sheet">Instagram</a></li>
         </ul>
