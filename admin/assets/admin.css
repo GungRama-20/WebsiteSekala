@@ -29,7 +29,7 @@
   --topbar-h:      64px;
 }
 
-html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--dark); }
+html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--dark); overflow-x: hidden; }
 
 /* ============================================================
    LAYOUT
@@ -42,6 +42,7 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 0; /* Important to prevent flex item from growing beyond screen */
   transition: margin-left .3s;
 }
 
@@ -481,11 +482,14 @@ body.sidebar-collapsed .sidebar-user-avatar { width: 32px; height: 32px; }
   .sidebar-toggle { display: block; }
   .charts-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
+  .admin-topbar { padding: 0 16px; }
 }
 
 @media (max-width: 480px) {
-  .stat-cards { grid-template-columns: 1fr 1fr; }
+  .stat-cards { grid-template-columns: 1fr; }
   .admin-content { padding: 16px; }
+  .topbar-page-title { font-size: 0.9rem; }
+  .admin-card-header { flex-direction: column; align-items: flex-start; }
 }
 
 /* ── Custom Popup ────────────────────────────────────────── */

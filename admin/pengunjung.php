@@ -202,7 +202,7 @@ $pieVals = [round($durasiHome), round($durasiDetail), round($durasiTesti)];
           <canvas id="visitorBarChart" height="100"></canvas>
         </div>
         <div class="chart-box">
-          <div class="chart-box-title">⏱️ Rata-rata Durasi (Detik)</div>
+          <div class="chart-box-title">⏱️ Rata-rata Durasi</div>
           <canvas id="visitorPieChart" height="120"></canvas>
         </div>
       </div>
@@ -249,7 +249,25 @@ if (pieVals.some(v => v > 0)) {
       labels: pieLabels,
       datasets: [{ data: pieVals, backgroundColor: pieColors, borderWidth: 0 }]
     },
-    options: { responsive:true, plugins:{legend:{position:'bottom'}} }
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let val = context.raw || 0;
+              let m = Math.floor(val / 60);
+              let s = val % 60;
+              let res = context.label + ': ';
+              if (m > 0) res += m + ' menit ';
+              if (s > 0 || m === 0) res += s + ' detik';
+              return res;
+            }
+          }
+        }
+      }
+    }
   });
 } else {
   document.getElementById('visitorPieChart').parentElement.innerHTML += '<p style="text-align:center;color:#94A3B8;font-size:13px;padding:20px 0;">Belum ada data durasi</p>';

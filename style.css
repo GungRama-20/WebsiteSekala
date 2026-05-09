@@ -40,6 +40,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body { font-family: var(--font-main); background: var(--bg); color: var(--dark); font-size: 15px; line-height: 1.65; overflow-x: hidden; }
+img { max-width: 100%; height: auto; }
 
 /* ---- CONTAINER ---- */
 .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 28px; }
@@ -85,3 +86,12 @@ select.form-control { cursor: pointer; appearance: none; background-image: url("
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--gray-light); }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .section-title { font-size: 1.6rem; }
+  .section-sub { font-size: 14px; }
+  .btn { padding: 10px 20px; font-size: 13px; }
+  .btn-lg { padding: 12px 28px; font-size: 14px; }
+}

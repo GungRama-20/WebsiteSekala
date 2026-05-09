@@ -189,12 +189,8 @@ if ($flash) {
 <div class="auth-box">
 
   <!-- Logo -->
-  <a class="auth-logo" href="index.php">
-    <div align="center">
-    <a href="index.php">
-      <img src="assets/logo.png" width="250px">
-    </a>
-  </div>
+  <a class="auth-logo" href="index.php" style="justify-content: center; margin-top: -20px; margin-bottom: 20px;">
+    <img src="assets/logo.png" width="250px" alt="SEKALA Logo">
   </a>
 
   <h1 class="auth-title">Welcome Back to SEKALA</h1>
@@ -226,15 +222,25 @@ if ($flash) {
 
     <div class="form-group">
       <label class="form-label" for="password">Password</label>
-      <input
-        class="form-control"
-        id="password"
-        name="password"
-        type="password"
-        placeholder="Masukan password anda"
-        required
-        autocomplete="current-password"
-      />
+      <div style="position: relative;">
+        <input
+          class="form-control"
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Masukan password anda"
+          required
+          autocomplete="current-password"
+          style="padding-right: 40px;"
+        />
+        <button type="button" id="toggle-password" onclick="togglePasswordVisibility('password','toggle-password')" title="Lihat password"
+          style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94A3B8;padding:0;line-height:0;">
+          <svg id="eye-icon-password" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </button>
+      </div>
       <a class="auth-forgot" href="forgot_password.php">Forgot Password?</a>
     </div>
 
@@ -261,6 +267,20 @@ if ($flash) {
   </p>
 
 </div>
+
+<script>
+function togglePasswordVisibility(inputId, btnId) {
+  const input = document.getElementById(inputId);
+  const btn   = typeof btnId === 'string' ? document.getElementById(btnId) : btnId;
+  const isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
+  btn.style.color = isHidden ? '#0F1B2D' : '#94A3B8';
+  /* swap SVG icon */
+  const eyeOpen  = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>`;
+  const eyeSlash = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0 1 12 19c-4.477 0-8.268-2.943-9.542-7a9.978 9.978 0 0 1 2.189-3.657M6.47 6.47A9.953 9.953 0 0 1 12 5c4.478 0 8.268 2.943 9.542 7a9.977 9.977 0 0 1-1.356 2.646M6.47 6.47 3 3m3.47 3.47 7.06 7.06M16.53 16.53 21 21m-4.47-4.47-7.06-7.06"/></svg>`;
+  btn.innerHTML = isHidden ? eyeSlash : eyeOpen;
+}
+</script>
 
 </body>
 </html>

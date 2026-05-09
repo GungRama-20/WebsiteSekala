@@ -92,6 +92,38 @@ $cp = $current_page ?? '';
   </div>
 </aside>
 
+<!-- Overlay for mobile sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<style>
+/* Overlay for mobile */
+.sidebar-overlay {
+  position: fixed; inset: 0; background: rgba(15,27,45,0.5); z-index: 90;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.sidebar-overlay.show { opacity: 1; pointer-events: auto; }
+@media (min-width: 769px) { .sidebar-overlay { display: none !important; } }
+</style>
+
+<script>
+function toggleSidebar() {
+  const sidebar = document.getElementById('adminSidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  if(sidebar) sidebar.classList.toggle('open');
+  if(overlay) overlay.classList.toggle('show');
+}
+
+// Override the inline onclick for .sidebar-toggle if it exists
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.querySelector('.sidebar-toggle');
+  if(toggleBtn) {
+    toggleBtn.onclick = function(e) {
+      e.preventDefault();
+      toggleSidebar();
+    };
+  }
+});
+</script>
 <script>
 function toggleUserMenu() {
   const card   = document.getElementById('sidebarUserCard');

@@ -143,4 +143,5 @@
   .testi-grid { grid-template-columns: 1fr; }
   .hero-title { font-size: 2rem; }
   .footer-inner { grid-template-columns: 1fr; }
+  .quick-value-grid { grid-template-columns: 1fr; }
 }
