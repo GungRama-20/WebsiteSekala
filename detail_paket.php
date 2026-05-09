@@ -292,6 +292,40 @@ if (empty($testimonials)) {
 </footer>
 
 
-<script src="assets/js/main.js"></script>
+<script>
+// ============================================================
+// Gallery Thumbnail Switcher
+// ============================================================
+function switchThumb(index) {
+  var thumbs = document.querySelectorAll('.gallery-thumb');
+  var mainImg = document.getElementById('gallery-main-img');
+
+  if (!mainImg || thumbs.length === 0) return;
+
+  // Update gambar besar
+  var clickedThumb = thumbs[index];
+  if (!clickedThumb) return;
+
+  var newSrc = clickedThumb.getAttribute('data-src');
+  if (newSrc) {
+    // Animasi fade
+    mainImg.style.transition = 'opacity 0.2s ease';
+    mainImg.style.opacity = '0';
+    setTimeout(function() {
+      mainImg.src = newSrc;
+      mainImg.style.opacity = '1';
+    }, 200);
+  }
+
+  // Update class active pada thumbnail
+  thumbs.forEach(function(thumb, i) {
+    if (i === index) {
+      thumb.classList.add('active');
+    } else {
+      thumb.classList.remove('active');
+    }
+  });
+}
+</script>
 </body>
 </html>
