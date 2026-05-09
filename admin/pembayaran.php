@@ -9,19 +9,72 @@ require_once __DIR__ . '/includes/admin_auth.php';
 $flash_msg  = '';
 $flash_type = '';
 
-// Verifikasi / Tolak pembayaran
+// --- Ambil flash dari session (setelah redirect) ---
+if (!empty($_SESSION['admin_flash'])) {
+    $flash_msg  = $_SESSION['admin_flash']['msg'];
+    $flash_type = $_SESSION['admin_flash']['type'];
+    unset($_SESSION['admin_flash']);
+}
+
+// Verifikasi pembayaran
 if (isset($_GET['verif'])) {
     $id = (int)$_GET['verif'];
-    $conn->query("UPDATE tb_pembayaran SET status_pembayaran='terverifikasi' WHERE id_pembayaran=$id");
-    $conn->query("UPDATE tb_pesanan SET status_pesanan='selesai' WHERE id_pesanan=(SELECT id_pesanan FROM tb_pembayaran WHERE id_pembayaran=$id LIMIT 1)");
-    $flash_msg  = 'Pembayaran berhasil diverifikasi.';
-    $flash_type = 'success';
+
+    // 1. Update status pembayaran
+    $stmtV = $conn->prepare("UPDATE tb_pembayaran SET status_pembayaran='terverifikasi' WHERE id_pembayaran=?");
+    $stmtV->bind_param('i', $id);
+    $stmtV->execute();
+    $stmtV->close();
+
+    // 2. Dapatkan id_pesanan dari pembayaran ini
+    $stmtG = $conn->prepare("SELECT id_pesanan FROM tb_pembayaran WHERE id_pembayaran=? LIMIT 1");
+    $stmtG->bind_param('i', $id);
+    $stmtG->execute();
+    $rowG = $stmtG->get_result()->fetch_assoc();
+    $stmtG->close();
+
+    // 3. Update status pesanan menjadi selesai
+    if ($rowG) {
+        $id_pesanan_update = (int)$rowG['id_pesanan'];
+        $stmtP = $conn->prepare("UPDATE tb_pesanan SET status_pesanan='selesai' WHERE id_pesanan=?");
+        $stmtP->bind_param('i', $id_pesanan_update);
+        $stmtP->execute();
+        $stmtP->close();
+    }
+
+    $_SESSION['admin_flash'] = ['msg' => 'Pembayaran berhasil diverifikasi.', 'type' => 'success'];
+    header('Location: pembayaran.php');
+    exit;
 }
+
+// Tolak pembayaran
 if (isset($_GET['tolak'])) {
     $id = (int)$_GET['tolak'];
-    $conn->query("UPDATE tb_pembayaran SET status_pembayaran='ditolak' WHERE id_pembayaran=$id");
-    $flash_msg  = 'Pembayaran ditolak.';
-    $flash_type = 'error';
+
+    // 1. Update status pembayaran
+    $stmtT = $conn->prepare("UPDATE tb_pembayaran SET status_pembayaran='ditolak' WHERE id_pembayaran=?");
+    $stmtT->bind_param('i', $id);
+    $stmtT->execute();
+    $stmtT->close();
+
+    // 2. Kembalikan status pesanan ke pending agar pelanggan bisa bayar ulang
+    $stmtG2 = $conn->prepare("SELECT id_pesanan FROM tb_pembayaran WHERE id_pembayaran=? LIMIT 1");
+    $stmtG2->bind_param('i', $id);
+    $stmtG2->execute();
+    $rowG2 = $stmtG2->get_result()->fetch_assoc();
+    $stmtG2->close();
+
+    if ($rowG2) {
+        $id_pesanan_tolak = (int)$rowG2['id_pesanan'];
+        $stmtP2 = $conn->prepare("UPDATE tb_pesanan SET status_pesanan='pending' WHERE id_pesanan=?");
+        $stmtP2->bind_param('i', $id_pesanan_tolak);
+        $stmtP2->execute();
+        $stmtP2->close();
+    }
+
+    $_SESSION['admin_flash'] = ['msg' => 'Pembayaran ditolak. Pelanggan dapat melakukan pembayaran ulang.', 'type' => 'error'];
+    header('Location: pembayaran.php');
+    exit;
 }
 
 // Filter
@@ -61,6 +114,69 @@ function statusBayarBadge($s) {
   <title>Data Pembayaran — SEKALA Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/admin.css">
+  <style>
+    /* QRIS badge for payment method */
+    .qris-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, #E53935, #B71C1C);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+    }
+    /* QRIS info bar */
+    .qris-info-bar {
+      background: linear-gradient(135deg, #fff5f5, #fff);
+      border: 1.5px solid #FECACA;
+      border-radius: 16px;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .qris-info-bar img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #E53935;
+    }
+    .qris-info-bar-text h4 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #B91C1C;
+      margin-bottom: 4px;
+    }
+    .qris-info-bar-text p {
+      font-size: 0.82rem;
+      color: #64748B;
+      line-height: 1.5;
+    }
+    /* Bukti preview link */
+    .bukti-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #2563EB;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 4px 8px;
+      background: #EFF6FF;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .bukti-link:hover {
+      background: #DBEAFE;
+      color: #1D4ED8;
+    }
+  </style>
 </head>
 <body>
 <div class="admin-layout">
@@ -80,6 +196,19 @@ function statusBayarBadge($s) {
       <div class="admin-flash <?= $flash_type ?>"><?= $flash_type==='success'?'✅':'❌' ?> <?= htmlspecialchars($flash_msg) ?></div>
       <?php endif; ?>
 
+      <!-- QRIS Info Bar -->
+      <div class="qris-info-bar no-print">
+        <img src="../assets/QrisSekala.jpg" alt="QRIS SEKALA">
+        <div class="qris-info-bar-text">
+          <h4>📱 Metode Pembayaran: QRIS</h4>
+          <p>
+            <b>SEKALA DESAIN</b> · NMID: ID1026517275388 · A01<br>
+            Semua pembayaran pelanggan menggunakan QRIS.<br>
+            Verifikasi dengan mencocokkan bukti transfer pelanggan dengan nominal pesanan.
+          </p>
+        </div>
+      </div>
+
       <!-- Summary -->
       <div class="stat-cards" style="margin-bottom:20px;">
         <?php
@@ -95,7 +224,7 @@ function statusBayarBadge($s) {
 
       <div class="admin-card">
         <div class="admin-card-header">
-          <div class="admin-card-title">💳 Semua Pembayaran</div>
+          <div class="admin-card-title">📱 Semua Pembayaran QRIS</div>
           <form method="GET" class="filter-bar no-print">
             <select class="form-ctrl" name="status" style="width:auto;padding:9px 14px;border-radius:10px;" onchange="this.form.submit()">
               <option value="">Semua Status</option>
@@ -117,12 +246,14 @@ function statusBayarBadge($s) {
                 <td><b>#<?= str_pad($b['id_pembayaran'],4,'0',STR_PAD_LEFT) ?></b></td>
                 <td><?= htmlspecialchars($b['nama_pelanggan']) ?></td>
                 <td><?= htmlspecialchars($b['jenis_desain']) ?></td>
-                <td><?= htmlspecialchars($b['metode_pembayaran']) ?></td>
+                <td><span class="qris-pill">&#9654; QRIS</span></td>
                 <td><b><?= formatRupiah($b['jumlah_bayar']) ?></b></td>
                 <td>
                   <?php if ($b['bukti_pembayaran']): ?>
-                  <a href="../<?= htmlspecialchars($b['bukti_pembayaran']) ?>" target="_blank" style="color:#2563EB;font-size:12px;">📎 Lihat</a>
-                  <?php else: echo '-'; endif; ?>
+                  <a href="../<?= htmlspecialchars($b['bukti_pembayaran']) ?>" target="_blank" class="bukti-link">📎 Lihat Bukti</a>
+                  <?php else: ?>
+                  <span style="color:#CBD5E1;font-size:12px;">Belum upload</span>
+                  <?php endif; ?>
                 </td>
                 <td><?= date('d M Y', strtotime($b['tanggal_bayar'])) ?></td>
                 <td><?= statusBayarBadge($b['status_pembayaran']) ?></td>

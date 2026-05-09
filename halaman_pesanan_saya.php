@@ -23,15 +23,20 @@ if ($stmtP) {
     $stmtP->close();
 }
 
-// Ambil daftar pesanan
+// Ambil daftar pesanan (gunakan pembayaran terbaru per pesanan)
 $pesanan = [];
 if ($id_pelanggan > 0) {
-    $q = "SELECT p.id_pesanan, p.judul_proyek, p.status_pesanan, p.tanggal_pesan, p.deadline, 
-                 d.jenis_desain, 
-                 b.status_pembayaran, b.jumlah_bayar
+    $q = "SELECT p.id_pesanan, p.judul_proyek, p.status_pesanan, p.tanggal_pesan, p.deadline,
+                 d.jenis_desain,
+                 b.status_pembayaran, b.jumlah_bayar, b.id_pembayaran
           FROM tb_pesanan p
           LEFT JOIN tb_desain d ON p.id_desain = d.id_desain
-          LEFT JOIN tb_pembayaran b ON p.id_pesanan = b.id_pesanan
+          LEFT JOIN tb_pembayaran b
+            ON b.id_pembayaran = (
+               SELECT MAX(bb.id_pembayaran)
+               FROM tb_pembayaran bb
+               WHERE bb.id_pesanan = p.id_pesanan
+            )
           WHERE p.id_pelanggan = ?
           ORDER BY p.tanggal_pesan DESC";
     $stmt = $conn->prepare($q);
@@ -231,37 +236,17 @@ if ($id_pelanggan > 0) {
       box-shadow: 0 4px 12px rgba(37,99,235,0.3);
     }
 
-    /* Back Bar untuk konsistensi */
-    .pesanan-back-bar {
-      background: #fff;
-      border-bottom: 1px solid #E2E8F0;
-      padding: 12px 0;
-    }
-    .pesanan-back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #64748B;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .pesanan-back-btn:hover {
-      color: #2563EB;
-    }
+    /* Back Bar — style diambil dari profile-web.css (sudah di-link) */
   </style>
 </head>
 <body>
 
-<?php include 'navbar.php'; ?>
-
-<!-- Back Bar -->
-<div class="pesanan-back-bar">
+<!-- Back Bar — konsisten dengan profile.php -->
+<div class="profile-back-bar">
   <div class="container">
-    <a href="profile.php" class="pesanan-back-btn">
+    <a href="index.php" class="profile-back-btn">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Kembali ke Profil
+      Kembali ke Beranda
     </a>
   </div>
 </div>
@@ -275,7 +260,20 @@ if ($id_pelanggan > 0) {
 
 <section class="pesanan-section">
   <div class="container">
-    
+
+    <?php
+    // Tampilkan flash message jika ada
+    $flash = getFlash();
+    if ($flash): ?>
+    <div style="max-width:900px;margin:0 auto 20px auto;padding:14px 18px;border-radius:12px;
+                background:<?= $flash['type']==='info'?'#DBEAFE':($flash['type']==='success'?'#D1FAE5':'#FEE2E2') ?>;
+                color:<?= $flash['type']==='info'?'#1D4ED8':($flash['type']==='success'?'#059669':'#DC2626') ?>;
+                border:1px solid <?= $flash['type']==='info'?'#93C5FD':($flash['type']==='success'?'#6EE7B7':'#FCA5A5') ?>;
+                font-size:14px;font-weight:600;">
+      <?= $flash['type']==='success'?'✅':($flash['type']==='info'?'ℹ️':'❌') ?> <?= htmlspecialchars($flash['message']) ?>
+    </div>
+    <?php endif; ?>
+
     <?php if (empty($pesanan)): ?>
       <div class="empty-state">
         <div class="empty-icon">📦</div>
